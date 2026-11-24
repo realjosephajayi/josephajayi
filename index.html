@@ -66,7 +66,7 @@
   .wrap{max-width:1200px;margin:0 auto;padding:0 40px;}
   @media(max-width:640px){.wrap{padding:0 20px;}}
   section{position:relative;}
-  section.pad{padding:clamp(44px,7vw,88px) 0;}
+  section.pad{padding-top:clamp(44px,7vw,88px);padding-bottom:clamp(44px,7vw,88px);}
   .bg-paper{background:var(--paper);}
 
   .eyebrow{font-size:0.72rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink);margin-bottom:16px;}
@@ -84,25 +84,8 @@
   @media(max-width:920px){.nav-links{display:none;}}
   .nav-cta{font-size:0.8rem;font-weight:700;padding:9px 16px;border:1.5px solid var(--blue);color:var(--blue);border-radius:24px;display:flex;align-items:center;gap:6px;}
   .nav-cta:hover{background:var(--blue);color:#fff;}
-  @media(max-width:560px){.nav-cta{display:none;}}
   .theme-toggle{width:36px;height:36px;border-radius:50%;border:1.5px solid var(--line);background:transparent;color:var(--ink);font-size:0.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
   .theme-toggle:hover{border-color:var(--blue);color:var(--blue);}
-  .nav-right{display:flex;align-items:center;gap:12px;}
-  .nav-toggle{
-    display:none;width:36px;height:36px;border-radius:50%;border:1.5px solid var(--line);background:transparent;
-    color:var(--ink);cursor:pointer;align-items:center;justify-content:center;flex-shrink:0;
-  }
-  .nav-toggle:hover{border-color:var(--blue);color:var(--blue);}
-  @media(max-width:920px){.nav-toggle{display:flex;}}
-  .mobile-nav{
-    display:none;flex-direction:column;max-width:1200px;margin:0 auto;overflow:hidden;
-    max-height:0;transition:max-height 0.25s ease;border-top:1px solid transparent;
-  }
-  @media(max-width:920px){.mobile-nav{display:flex;}}
-  .mobile-nav.open{max-height:400px;border-top-color:var(--line);}
-  .mobile-nav a{padding:14px 20px;font-size:0.9rem;font-weight:600;color:var(--slate);border-bottom:1px solid var(--line);}
-  .mobile-nav a.active, .mobile-nav a:hover{color:var(--ink);}
-  .mobile-nav .nav-cta{margin:14px 20px;justify-content:center;display:flex;}
 
   /* ---------- HERO ---------- */
   .hero{padding:56px 0 64px;background:var(--paper);position:relative;overflow:hidden;}
@@ -175,8 +158,7 @@
   /* ---------- FEATURED WORK ---------- */
   .work-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;}
   @media(max-width:760px){.work-grid{grid-template-columns:1fr;}}
-  .work-card{border-radius:16px;overflow:hidden;transition:transform 0.25s ease,box-shadow 0.25s ease;display:block;position:relative;background:var(--paper);border:1px solid var(--line);cursor:pointer;}
-  .work-card:focus-visible,.mw-card:focus-visible{outline:2px solid var(--blue);outline-offset:3px;}
+  .work-card{border-radius:16px;overflow:hidden;transition:transform 0.25s ease,box-shadow 0.25s ease;display:block;position:relative;background:var(--paper);border:1px solid var(--line);}
   .live-tag{font-size:0.68rem;font-weight:800;color:var(--blue);background:rgba(47,93,224,0.1);padding:3px 8px;border-radius:10px;margin-left:6px;vertical-align:middle;}
   .work-card:hover{transform:translateY(-5px);box-shadow:0 24px 48px -20px rgba(0,0,0,0.25);}
   .work-thumb{aspect-ratio:16/10;display:flex;align-items:flex-end;padding:22px;color:#fff;font-weight:700;font-size:1.2rem;line-height:1.2;position:relative;overflow:hidden;}
@@ -199,17 +181,26 @@
   .more-work-scroll{
     display:flex;gap:20px;overflow-x:auto;scroll-snap-type:x mandatory;
     padding:4px 40px 12px;-webkit-overflow-scrolling:touch;scrollbar-width:none;
-    justify-content:safe center;max-width:1200px;margin:0 auto;
+    max-width:1200px;margin:0 auto;
   }
+  /* auto margins center the cards when there is spare room, and collapse to 0 when the row overflows, so the first card is never clipped */
+  .mw-card:first-child{margin-left:auto;}
+  .mw-card:last-child{margin-right:auto;}
   .more-work-scroll::-webkit-scrollbar{display:none;}
   .mw-card{
-    flex:0 0 auto;width:300px;scroll-snap-align:start;border-radius:16px;overflow:hidden;cursor:pointer;
+    flex:0 0 auto;width:300px;scroll-snap-align:start;border-radius:16px;overflow:hidden;
     background:var(--white);border:1px solid var(--line);transition:transform 0.25s ease,box-shadow 0.25s ease;
   }
   .mw-card:hover{transform:translateY(-4px);box-shadow:0 18px 36px -18px rgba(0,0,0,0.2);}
   .mw-thumb{position:relative;aspect-ratio:4/3;overflow:hidden;background:var(--paper);}
-  .mw-thumb img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.4s ease;}
-  .mw-card:hover .mw-thumb img{transform:scale(1.04);}
+  .mw-slide{display:none;width:100%;height:100%;object-fit:cover;}
+  .mw-slide.active{display:block;}
+  .mw-zone{position:absolute;top:0;bottom:0;width:34%;z-index:2;cursor:pointer;background:transparent;border:none;padding:0;}
+  .mw-zone.prev{left:0;}
+  .mw-zone.next{right:0;}
+  .mw-dots{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:3;}
+  .mw-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.55);border:none;padding:0;cursor:pointer;transition:background 0.15s ease,transform 0.15s ease;}
+  .mw-dot.active{background:#fff;transform:scale(1.25);}
   .mw-meta{padding:14px 16px 16px;}
   .mw-meta h3{font-size:0.94rem;font-weight:700;margin-bottom:5px;}
   .mw-meta p{font-size:0.78rem;color:var(--slate);}
@@ -217,127 +208,6 @@
     .more-work-scroll{padding:4px 20px 12px;}
     .mw-card{width:240px;}
   }
-
-  /* ---------- WORK LIGHTBOX (Dribbble-style project page) ---------- */
-  .lightbox{position:fixed;inset:0;z-index:1000;display:none;}
-  .lightbox.open{display:block;}
-  .lightbox-backdrop{position:absolute;inset:0;background:rgba(20,20,22,0.55);}
-  .lightbox-panel{
-    position:relative;z-index:1;height:100%;width:100%;overflow-y:auto;
-    -webkit-overflow-scrolling:touch;background:var(--white);
-  }
-  .lightbox-close{
-    position:fixed;top:20px;right:24px;z-index:5;width:40px;height:40px;border-radius:50%;
-    border:none;background:var(--white);color:var(--ink);font-size:1.05rem;cursor:pointer;
-    display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px -6px rgba(0,0,0,0.35);
-  }
-
-  .lightbox-content{max-width:1100px;margin:0 auto;padding:56px 24px 70px;}
-  .lb-grid{display:grid;grid-template-columns:1fr 300px;gap:44px;align-items:start;}
-  @media(max-width:900px){.lb-grid{grid-template-columns:1fr;gap:32px;}}
-
-  /* sidebar author card (Dribbble-style) */
-  .lb-sidebar{display:flex;flex-direction:column;gap:16px;position:sticky;top:24px;}
-  @media(max-width:900px){.lb-sidebar{position:static;}}
-  .lb-side-card{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:22px;}
-  .lb-profile{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
-  .lb-avatar{
-    width:44px;height:44px;border-radius:50%;overflow:hidden;flex-shrink:0;
-    background:var(--white);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;
-  }
-  .lb-avatar svg{width:22px;height:22px;}
-  .lb-author-name{font-size:0.9rem;font-weight:700;color:var(--ink);line-height:1.4;}
-  .lb-author-meta{font-size:0.76rem;line-height:1.4;display:flex;align-items:center;gap:8px;}
-  .lb-author-status{color:#3BAA6A;font-weight:600;}
-  .lb-follow{color:var(--slate);font-weight:600;cursor:pointer;text-decoration:none;}
-  .lb-follow:hover{color:var(--ink);text-decoration:underline;}
-  .lb-side-icon-row{display:flex;align-items:center;gap:10px;margin-bottom:16px;}
-  .lb-icon-btn{
-    width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:var(--white);color:var(--ink);
-    display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:transform 0.15s ease;
-  }
-  .lb-icon-btn:hover{border-color:var(--blue);color:var(--blue);}
-  .lb-icon-btn:active{transform:scale(0.9);}
-  .lb-icon-btn#lightboxLike.active{border-color:#e0245e;color:#e0245e;background:rgba(224,36,94,0.08);}
-  .lb-icon-btn#lightboxLike.active svg{fill:#e0245e;}
-  .lb-icon-btn#lightboxSave.active{border-color:var(--blue);color:var(--blue);background:rgba(59,102,235,0.08);}
-  .lb-icon-btn#lightboxSave.active svg{fill:var(--blue);}
-  .lb-side-card p{font-size:0.82rem;color:var(--slate);line-height:1.55;margin-bottom:16px;}
-  .lb-side-stats{display:flex;gap:10px;margin-bottom:16px;}
-  .lb-side-stat{flex:1;background:var(--white);border:1px solid var(--line);border-radius:10px;padding:10px;text-align:center;}
-  .lb-side-stat .n{font-size:0.98rem;font-weight:800;color:var(--ink);}
-  .lb-side-stat .l{font-size:0.62rem;font-weight:700;letter-spacing:0.02em;text-transform:uppercase;color:var(--slate);margin-top:2px;}
-  .lb-side-cta{
-    display:flex;align-items:center;justify-content:center;width:100%;background:var(--ink);color:var(--white);
-    border:none;border-radius:22px;padding:12px 18px;font-size:0.86rem;font-weight:700;cursor:pointer;text-decoration:none;
-  }
-  .lb-live-link{
-    display:flex;align-items:center;justify-content:center;width:100%;margin-top:10px;
-    font-size:0.82rem;font-weight:700;color:var(--ink);text-decoration:none;padding:8px;border-radius:20px;
-    border:1px solid var(--line);
-  }
-  .lb-live-link:hover{border-color:var(--blue);color:var(--blue);}
-  .lb-live-link.hidden{display:none;}
-
-  /* left column: gallery + about */
-  .lb-eyebrow{font-size:0.72rem;font-weight:800;letter-spacing:0.04em;text-transform:uppercase;color:var(--blue);margin-bottom:8px;}
-  .lb-title{font-size:clamp(1.4rem,3vw,1.9rem);font-weight:800;letter-spacing:-0.01em;color:var(--ink);margin-bottom:6px;}
-  .lb-subtitle{font-size:0.92rem;color:var(--slate);margin-bottom:22px;}
-  .lb-main-image{
-    position:relative;width:100%;aspect-ratio:4/3;border-radius:16px;overflow:hidden;
-    background:var(--paper);border:1px solid var(--line);
-    display:flex;align-items:center;justify-content:center;
-  }
-  .lb-main-image img{width:100%;height:100%;object-fit:contain;display:block;}
-  .lb-img-nav{
-    position:absolute;top:50%;transform:translateY(-50%);z-index:2;width:40px;height:40px;border-radius:50%;
-    border:none;background:rgba(21,24,28,0.55);color:#fff;font-size:1rem;cursor:pointer;
-    display:flex;align-items:center;justify-content:center;backdrop-filter:blur(2px);
-    transition:background 0.15s ease;
-  }
-  .lb-img-nav:hover{background:rgba(21,24,28,0.78);}
-  .lb-img-nav.lb-img-prev{left:14px;}
-  .lb-img-nav.lb-img-next{right:14px;}
-  .lb-img-nav:disabled,.lb-img-nav.hidden{display:none;}
-  @media(max-width:600px){
-    .lb-img-nav{width:34px;height:34px;font-size:0.88rem;}
-    .lb-img-nav.lb-img-prev{left:8px;}
-    .lb-img-nav.lb-img-next{right:8px;}
-  }
-  .lb-thumbstrip{display:flex;gap:10px;margin-top:14px;overflow-x:auto;scrollbar-width:none;}
-  .lb-thumbstrip::-webkit-scrollbar{display:none;}
-  .lb-thumb{
-    flex:0 0 auto;width:84px;height:64px;border-radius:8px;overflow:hidden;cursor:pointer;
-    border:2px solid transparent;opacity:0.65;transition:opacity 0.15s ease,border-color 0.15s ease;background:var(--paper);
-  }
-  .lb-thumb img{width:100%;height:100%;object-fit:cover;display:block;}
-  .lb-thumb:hover{opacity:0.9;}
-  .lb-thumb.active{opacity:1;border-color:var(--blue);}
-  .lb-about{margin-top:40px;padding-top:32px;border-top:1px solid var(--line);}
-  .lb-about h4{font-size:1.02rem;font-weight:800;color:var(--ink);margin-bottom:12px;}
-  .lb-about p{font-size:0.92rem;line-height:1.7;color:var(--slate);}
-  .lb-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px;}
-  .lb-tag{font-size:0.78rem;font-weight:600;color:var(--ink);background:var(--paper);border-radius:20px;padding:7px 14px;}
-
-  /* more-work strip inside lightbox */
-  .lb-more{border-top:1px solid var(--line);padding:32px 28px 56px;}
-  .lb-more h4{font-size:0.86rem;font-weight:800;color:var(--ink);margin-bottom:16px;}
-  .lb-more-row{display:flex;gap:16px;overflow-x:auto;scrollbar-width:none;max-width:1100px;margin:0 auto;}
-  .lb-more-row::-webkit-scrollbar{display:none;}
-  .lb-more-item{flex:0 0 auto;width:200px;cursor:pointer;}
-  .lb-more-thumb{width:200px;height:150px;border-radius:10px;overflow:hidden;background:var(--paper);border:1px solid var(--line);transition:transform 0.2s ease,box-shadow 0.2s ease;}
-  .lb-more-thumb img{width:100%;height:100%;object-fit:cover;}
-  .lb-more-item:hover .lb-more-thumb{transform:translateY(-3px);box-shadow:0 14px 28px -14px rgba(0,0,0,0.28);}
-  .lb-more-item:focus-visible .lb-more-thumb{outline:2px solid var(--blue);outline-offset:2px;}
-  .lb-more-item p{font-size:0.8rem;font-weight:700;color:var(--ink);margin-top:8px;}
-  .lb-more-item span{display:block;font-size:0.72rem;color:var(--slate);margin-top:2px;}
-  .lb-more-item.active .lb-more-thumb{outline:2px solid var(--blue);outline-offset:2px;}
-  @media(max-width:600px){
-    .lb-more{padding:26px 16px 46px;}
-    .lb-more-item{width:150px;}
-    .lb-more-thumb{width:150px;height:112px;}
-  }
-  body.lb-lock{overflow:hidden;}
 
 
   /* ---------- WHAT I DO (icon row) ---------- */
@@ -350,9 +220,9 @@
   .do-item{padding:0 18px;border-left:1px solid var(--line);}
   .do-item:first-child{border-left:none;}
   @media(max-width:760px){.do-item:nth-child(odd){border-left:none;}.do-item{border-left:1px solid var(--line);}}
-  @media(max-width:480px){.do-row{grid-template-columns:1fr;}.do-item{border-left:none;border-top:1px solid var(--line);padding:20px 0 0;}.do-item:first-child{border-top:none;padding-top:0;}.do-item h3{min-height:0;}}
+  @media(max-width:480px){.do-row{grid-template-columns:1fr;}.do-item{border-left:none;border-top:1px solid var(--line);padding:20px 0 0;}.do-item:first-child{border-top:none;padding-top:0;}}
   .do-icon{width:38px;height:38px;border-radius:10px;background:var(--paper);display:flex;align-items:center;justify-content:center;margin-bottom:14px;color:var(--ink);}
-  .do-item h3{font-size:0.94rem;font-weight:700;line-height:1.35;margin-bottom:5px;min-height:2.7em;}
+  .do-item h3{font-size:0.94rem;font-weight:700;margin-bottom:5px;}
   .do-item p{font-size:0.78rem;color:var(--slate);}
 
   /* ---------- BUILT WITH + QUOTE/STAT ---------- */
@@ -420,6 +290,12 @@
   .n-list li::before{content:"→";color:var(--blue);flex-shrink:0;}
   .n-list.check li::before{content:"✓";color:var(--sage-dark);}
 
+  /* ---------- TECH GRID ---------- */
+  .tech-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:20px;}
+  @media(max-width:860px){.tech-grid{grid-template-columns:repeat(2,1fr);}}
+  .tech-col h3{font-size:0.74rem;font-weight:800;text-transform:uppercase;letter-spacing:0.06em;color:var(--slate);margin-bottom:12px;}
+  .tech-col li{padding:4px 0;font-size:0.84rem;}
+
   /* ---------- CONTACT ---------- */
   .contact-layout{display:grid;grid-template-columns:0.85fr 1.15fr;gap:40px;}
   @media(max-width:900px){.contact-layout{grid-template-columns:1fr;gap:30px;}}
@@ -473,23 +349,9 @@
       <a href="#process">Process</a>
       <a href="#contact">Contact</a>
     </div>
-    <div class="nav-right">
-      <a href="https://wa.me/2347046390817" target="_blank" rel="noopener" class="nav-cta">Let's talk →</a>
-      <button type="button" id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
-      <button type="button" id="navToggle" class="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobileNav">
-        <svg id="navToggleIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-      </button>
-    </div>
-  </nav>
-  <div class="mobile-nav" id="mobileNav">
-    <a href="#home" class="active">Home</a>
-    <a href="#about">About</a>
-    <a href="#services">Services</a>
-    <a href="#work">Work</a>
-    <a href="#process">Process</a>
-    <a href="#contact">Contact</a>
     <a href="https://wa.me/2347046390817" target="_blank" rel="noopener" class="nav-cta">Let's talk →</a>
-  </div>
+    <button type="button" id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+  </nav>
 </header>
 
 <section class="hero" id="home">
@@ -529,7 +391,7 @@
         <div class="float-tag tag-top"><span class="k">Based in</span>Nigeria</div>
         <div class="float-tag tag-bottom"><span class="k">Available</span>Worldwide</div>
         <div class="social-rail">
-          <a href="https://linkedin.com/in/realjosephajayi" target="_blank" rel="noopener" aria-label="LinkedIn"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5C4.98 4.88 3.86 6 2.48 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.5 8.24H4.5V23H.5V8.24zM8.5 8.24H12.3V10.1H12.36C12.88 9.1 14.16 8 16.08 8C20.14 8 21 10.66 21 14.14V23H17V14.86C17 13.14 16.97 10.94 14.58 10.94C12.16 10.94 11.8 12.8 11.8 14.72V23H8.5V8.24Z"/></svg></a>
+          <a href="https://linkedin.com/in/jrealjosephajayi" target="_blank" rel="noopener" aria-label="LinkedIn"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5C4.98 4.88 3.86 6 2.48 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.5 8.24H4.5V23H.5V8.24zM8.5 8.24H12.3V10.1H12.36C12.88 9.1 14.16 8 16.08 8C20.14 8 21 10.66 21 14.14V23H17V14.86C17 13.14 16.97 10.94 14.58 10.94C12.16 10.94 11.8 12.8 11.8 14.72V23H8.5V8.24Z"/></svg></a>
           <a href="https://github.com/realjosephajayi" target="_blank" rel="noopener" aria-label="GitHub"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.57.1.78-.25.78-.55 0-.27-.01-1.17-.02-2.12-3.2.7-3.88-1.36-3.88-1.36-.52-1.34-1.28-1.69-1.28-1.69-1.04-.72.08-.7.08-.7 1.15.08 1.76 1.19 1.76 1.19 1.03 1.75 2.69 1.25 3.34.96.1-.74.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.04 0 0 .97-.31 3.18 1.18a11.1 11.1 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.58.23 2.75.11 3.04.74.81 1.19 1.83 1.19 3.09 0 4.42-2.69 5.39-5.25 5.68.41.36.78 1.06.78 2.14 0 1.55-.01 2.79-.01 3.17 0 .3.2.66.79.55A10.52 10.52 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"/></svg></a>
           <a href="https://wa.me/2347046390817" target="_blank" rel="noopener" aria-label="WhatsApp"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.25-.46-2.38-1.47-.88-.78-1.47-1.75-1.65-2.05-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.6-.92-2.2-.24-.58-.49-.5-.67-.5-.17-.01-.37-.01-.57-.01-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.47 0 1.45 1.06 2.86 1.21 3.06.15.2 2.09 3.2 5.08 4.48.71.31 1.26.49 1.69.63.71.22 1.35.19 1.86.12.57-.09 1.76-.72 2-1.41.25-.7.25-1.29.17-1.41-.07-.12-.27-.2-.57-.35z"/><path d="M12 2C6.48 2 2 6.48 2 12c0 1.98.58 3.83 1.58 5.38L2 22l4.75-1.55A9.94 9.94 0 0 0 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm0 18a8 8 0 0 1-4.29-1.24l-.31-.19-3.05 1 1.02-2.97-.2-.31A7.94 7.94 0 0 1 4 12c0-4.41 3.59-8 8-8s8 3.59 8 8-3.59 8-8 8z"/></svg></a>
         </div>
@@ -547,28 +409,28 @@
     <a href="#contact" class="view-all">Let's build yours →</a>
   </div>
   <div class="work-grid">
-    <a class="work-card reveal" href="https://neema-app.vercel.app" target="_blank" rel="noopener" data-project="neema">
+    <a class="work-card reveal" href="https://neema-app.vercel.app" target="_blank" rel="noopener">
       <div class="work-thumb has-img">
         <img src="images/neema-thumb.webp" alt="Neema app screens showing wallet balance and a crypto purchase flow" loading="lazy">
         <div class="caption-overlay"><span>Building trust<br>into fintech.</span></div>
       </div>
       <div class="work-meta"><h3>Neema <span class="live-tag">Live ↗</span></h3><p>Fintech Platform · Founder</p></div>
     </a>
-    <a class="work-card reveal" href="https://baxis.netlify.app" target="_blank" rel="noopener" data-project="baxis">
+    <a class="work-card reveal" href="https://baxis.netlify.app" target="_blank" rel="noopener">
       <div class="work-thumb has-img">
         <img src="images/baxis.webp" alt="Baxis dashboard showing an escrow-protected deal in progress" loading="lazy">
         <div class="caption-overlay"><span>Trade with<br>trust.</span></div>
       </div>
       <div class="work-meta"><h3>Baxis <span class="live-tag">Live ↗</span></h3><p>Escrow Platform · Secure Transactions</p></div>
     </a>
-    <div class="work-card reveal" data-project="flowmind" role="button" tabindex="0">
+    <div class="work-card reveal">
       <div class="work-thumb has-img">
         <img src="images/flowmind.webp" alt="FlowMind workflow builder showing an AI agent automating a lead-nurturing process" loading="lazy">
         <div class="caption-overlay"><span>98.4% workflow<br>success rate.</span></div>
       </div>
       <div class="work-meta"><h3>FlowMind</h3><p>AI Automation · OpenAI, Workflows</p></div>
     </div>
-    <div class="work-card reveal" data-project="projectly" role="button" tabindex="0">
+    <div class="work-card reveal">
       <div class="work-thumb has-img">
         <img src="images/projectly.webp" alt="Projectly dashboard showing active projects, tasks, and team activity" loading="lazy">
         <div class="caption-overlay"><span>Dashboards<br>that clarify.</span></div>
@@ -592,92 +454,64 @@
     </div>
   </div>
   <div class="more-work-scroll" id="moreWorkScroll">
-    <div class="mw-card" data-project="kora" role="button" tabindex="0">
+    <div class="mw-card">
       <div class="mw-thumb">
-        <img src="images/kora-1.webp" alt="Kora add-product form with a live preview panel" loading="lazy">
+        <img class="mw-slide active" src="images/kora-1.webp" alt="Kora add-product form with a live preview panel" loading="lazy">
+        <img class="mw-slide" src="images/kora-2.webp" alt="Kora orders page with status filters and order list" loading="lazy">
+        <img class="mw-slide" src="images/kora-3.webp" alt="Kora overview dashboard with sales chart and inventory alerts" loading="lazy">
+        <button type="button" class="mw-zone prev" aria-label="Previous image"></button>
+        <button type="button" class="mw-zone next" aria-label="Next image"></button>
+        <div class="mw-dots">
+          <button type="button" class="mw-dot active" aria-label="Slide 1"></button>
+          <button type="button" class="mw-dot" aria-label="Slide 2"></button>
+          <button type="button" class="mw-dot" aria-label="Slide 3"></button>
+        </div>
       </div>
       <div class="mw-meta"><h3>Kora</h3><p>E-commerce Platform · Inventory & Orders</p></div>
     </div>
-    <div class="mw-card" data-project="noma" role="button" tabindex="0">
+    <div class="mw-card">
       <div class="mw-thumb">
-        <img src="images/noma-1.webp" alt="Noma home dashboard with active projects and AI agents" loading="lazy">
+        <img class="mw-slide active" src="images/noma-1.webp" alt="Noma home dashboard with active projects and AI agents" loading="lazy">
+        <img class="mw-slide" src="images/noma-2.webp" alt="Noma workspace overview with automations and tasks" loading="lazy">
+        <img class="mw-slide" src="images/noma-3.webp" alt="Noma AI Agents page listing active agents and their purpose" loading="lazy">
+        <button type="button" class="mw-zone prev" aria-label="Previous image"></button>
+        <button type="button" class="mw-zone next" aria-label="Next image"></button>
+        <div class="mw-dots">
+          <button type="button" class="mw-dot active" aria-label="Slide 1"></button>
+          <button type="button" class="mw-dot" aria-label="Slide 2"></button>
+          <button type="button" class="mw-dot" aria-label="Slide 3"></button>
+        </div>
       </div>
       <div class="mw-meta"><h3>Noma</h3><p>AI Workspace · Agents & Automation</p></div>
     </div>
-    <div class="mw-card" data-project="baxis" role="button" tabindex="0">
+    <div class="mw-card">
       <div class="mw-thumb">
-        <img src="images/baxis-1.webp" alt="Baxis dashboard showing an escrow-protected deal in progress" loading="lazy">
+        <img class="mw-slide active" src="images/baxis-1.webp" alt="Baxis dashboard showing an escrow-protected deal in progress" loading="lazy">
+        <img class="mw-slide" src="images/baxis-2.webp" alt="Baxis expanded view with wallet, escrow flow, and dispute center" loading="lazy">
+        <button type="button" class="mw-zone prev" aria-label="Previous image"></button>
+        <button type="button" class="mw-zone next" aria-label="Next image"></button>
+        <div class="mw-dots">
+          <button type="button" class="mw-dot active" aria-label="Slide 1"></button>
+          <button type="button" class="mw-dot" aria-label="Slide 2"></button>
+        </div>
       </div>
       <div class="mw-meta"><h3>Baxis</h3><p>Escrow Platform · Secure Transactions</p></div>
     </div>
-    <div class="mw-card" data-project="neema-goals" role="button" tabindex="0">
+    <div class="mw-card">
       <div class="mw-thumb">
-        <img src="images/neema-more-1.webp" alt="Neema AI-powered goal planning flow: create a goal, get a plan, track progress" loading="lazy">
+        <img class="mw-slide active" src="images/neema-more-1.webp" alt="Neema AI-powered goal planning flow: create a goal, get a plan, track progress" loading="lazy">
+        <img class="mw-slide" src="images/neema-more-2.webp" alt="Neema AI insights screens showing spending patterns and recommendations" loading="lazy">
+        <button type="button" class="mw-zone prev" aria-label="Previous image"></button>
+        <button type="button" class="mw-zone next" aria-label="Next image"></button>
+        <div class="mw-dots">
+          <button type="button" class="mw-dot active" aria-label="Slide 1"></button>
+          <button type="button" class="mw-dot" aria-label="Slide 2"></button>
+        </div>
       </div>
-      <div class="mw-meta"><h3>Neema (AI-Powered Goals)</h3><p>Fintech Concept · Financial Planning</p></div>
+      <div class="mw-meta"><h3>Neema</h3><p>Fintech Platform · AI-Powered Goals</p></div>
     </div>
   </div>
 </section>
-
-<div class="lightbox" id="workLightbox" aria-hidden="true">
-  <div class="lightbox-backdrop" id="lightboxBackdrop"></div>
-  <button type="button" class="lightbox-close" id="lightboxClose" aria-label="Close">✕</button>
-  <div class="lightbox-panel" id="lightboxPanel">
-    <div class="lightbox-content">
-      <div class="lb-grid">
-        <div class="lb-main">
-          <div class="lb-eyebrow">More Work</div>
-          <h2 class="lb-title" id="lightboxTitle"></h2>
-          <p class="lb-subtitle" id="lightboxDesc"></p>
-
-          <div class="lb-main-image">
-            <img id="lightboxMainImage" src="" alt="">
-            <button type="button" class="lb-img-nav lb-img-prev" id="lightboxImgPrev" aria-label="Previous image">←</button>
-            <button type="button" class="lb-img-nav lb-img-next" id="lightboxImgNext" aria-label="Next image">→</button>
-          </div>
-          <div class="lb-thumbstrip" id="lightboxThumbstrip"></div>
-
-          <div class="lb-about">
-            <h4>About this project</h4>
-            <p id="lightboxAbout"></p>
-            <div class="lb-tags" id="lightboxTags"></div>
-          </div>
-        </div>
-
-        <div class="lb-sidebar">
-          <div class="lb-side-card">
-            <div class="lb-profile">
-              <div class="lb-avatar"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M8 4H20L14 16H8L14 4Z" fill="var(--blue)" opacity="0.55"/><path d="M14 16H24L18 28H8L14 16Z" fill="var(--blue)"/></svg></div>
-              <div>
-                <div class="lb-author-name">Joseph Ajayi</div>
-                <div class="lb-author-meta"><span class="lb-author-status">● Available for work</span><a href="https://linkedin.com/in/realjosephajayi" target="_blank" rel="noopener" class="lb-follow">Follow</a></div>
-              </div>
-            </div>
-            <div class="lb-side-icon-row">
-              <button type="button" class="lb-icon-btn" id="lightboxLike" aria-label="Like this project" aria-pressed="false">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
-              </button>
-              <button type="button" class="lb-icon-btn" id="lightboxSave" aria-label="Save this project" aria-pressed="false">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
-              </button>
-            </div>
-            <p>Software Engineer, AI Solutions Developer &amp; Product Designer. Founder of Neema. Based in Nigeria, open to remote work.</p>
-            <div class="lb-side-stats">
-              <div class="lb-side-stat"><div class="n">6+</div><div class="l">Years</div></div>
-              <div class="lb-side-stat"><div class="n">4</div><div class="l">Disciplines</div></div>
-            </div>
-            <a href="https://wa.me/2347046390817" target="_blank" rel="noopener" class="lb-side-cta" id="lightboxCta">Get in touch</a>
-            <a href="#" target="_blank" rel="noopener" class="lb-live-link hidden" id="lightboxLiveLink">View live site ↗</a>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="lb-more">
-      <h4>More work</h4>
-      <div class="lb-more-row" id="lightboxMoreRow"></div>
-    </div>
-  </div>
-</div>
 
 <section class="pad bg-paper" id="services">
   <div class="wrap">
@@ -837,9 +671,10 @@
 <section class="pad bg-paper">
   <div class="wrap">
     <div class="head-row"><div><div class="eyebrow">Stack</div><h2>Technologies I work with.</h2></div></div>
-    <div class="process-shot reveal" style="margin-top:0;">
+    <div class="process-shot reveal" style="margin-top:0;margin-bottom:24px;">
       <img src="images/tech-stack.webp" alt="Technology stack diagram: Frontend, Backend, Design, AI, and Database/Cloud tools" loading="lazy">
     </div>
+    <div class="tech-col" style="max-width:320px;"><h3>Also Working With</h3><ul><li>WordPress</li><li>Webflow</li><li>Wix</li></ul></div>
   </div>
 </section>
 
@@ -898,7 +733,7 @@
       <div class="footer-col">
         <h3>Connect</h3>
         <a href="https://github.com/realjosephajayi" target="_blank" rel="noopener">GitHub</a>
-        <a href="https://linkedin.com/in/realjosephajayi" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://linkedin.com/in/jrealjosephajayi" target="_blank" rel="noopener">LinkedIn</a>
         <a href="https://wa.me/2347046390817" target="_blank" rel="noopener">WhatsApp</a>
         <a href="Joseph-Ajayi-Resume.pdf" download="Joseph-Ajayi-Resume.pdf">Résumé</a>
       </div>
@@ -934,30 +769,6 @@
   })();
 
   (function(){
-    var navToggle = document.getElementById('navToggle');
-    var mobileNav = document.getElementById('mobileNav');
-    var navToggleIcon = document.getElementById('navToggleIcon');
-    if(!navToggle || !mobileNav) return;
-    var hamburgerIcon = navToggleIcon.innerHTML;
-    var closeIcon = '<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>';
-
-    function setOpen(open){
-      mobileNav.classList.toggle('open', open);
-      navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-      navToggleIcon.innerHTML = open ? closeIcon : hamburgerIcon;
-    }
-    navToggle.addEventListener('click', function(){
-      setOpen(!mobileNav.classList.contains('open'));
-    });
-    mobileNav.querySelectorAll('a').forEach(function(link){
-      link.addEventListener('click', function(){ setOpen(false); });
-    });
-    window.addEventListener('resize', function(){
-      if(window.innerWidth > 920) setOpen(false);
-    });
-  })();
-
-  (function(){
     var scroller = document.getElementById('moreWorkScroll');
     var prevBtn = document.getElementById('moreWorkPrev');
     var nextBtn = document.getElementById('moreWorkNext');
@@ -982,300 +793,27 @@
   })();
 
   (function(){
-    // ---- single source of truth for every project shown anywhere on the site ----
-    var PROJECT_ORDER = ['neema','baxis','flowmind','projectly','kora','noma','neema-goals'];
-    var PROJECTS = {
-      neema: {
-        title: 'Neema',
-        desc: 'Fintech Platform · Founder',
-        about: 'Neema is a fintech platform I founded, giving people an easy way to manage a digital wallet, buy and sell crypto, and trade peer-to-peer — all from one connected app, alongside a Neema Card and an admin dashboard for oversight.',
-        tags: ['Fintech Platform','Founder'],
-        liveUrl: 'https://neema-app.vercel.app',
-        images: [
-          {src:'images/neema-thumb.webp', alt:'Neema app screens showing wallet balance and a crypto purchase flow'},
-          {src:'images/neema-panels.webp', alt:'Neema product surfaces: P2P trading, Neema Card, wallet, and admin dashboard'}
-        ]
-      },
-      'neema-goals': {
-        title: 'Neema (AI-Powered Goals)',
-        desc: 'Fintech Concept · Financial Planning',
-        about: 'Neema is a fintech platform that turns financial goals into an actionable plan. It walks people through creating a goal, generating a plan, and tracking progress, while AI-driven insights highlight spending patterns and recommendations along the way.',
-        tags: ['Fintech Concept','AI-Powered Goals'],
-        images: [
-          {src:'images/neema-more-1.webp', alt:'Neema AI-powered goal planning flow: create a goal, get a plan, track progress'},
-          {src:'images/neema-more-2.webp', alt:'Neema AI insights screens showing spending patterns and recommendations'}
-        ]
-      },
-      baxis: {
-        title: 'Baxis',
-        desc: 'Escrow Platform · Secure Transactions',
-        about: 'Baxis is an escrow platform that makes online transactions safer for buyers and sellers. Every deal moves through a protected escrow flow, with a wallet and dispute center that keep both sides informed until funds are released.',
-        tags: ['Escrow Platform','Secure Transactions'],
-        liveUrl: 'https://baxis.netlify.app',
-        images: [
-          {src:'images/baxis-1.webp', alt:'Baxis dashboard showing an escrow-protected deal in progress'},
-          {src:'images/baxis-2.webp', alt:'Baxis expanded view with wallet, escrow flow, and dispute center'}
-        ]
-      },
-      flowmind: {
-        title: 'FlowMind',
-        desc: 'AI Automation · OpenAI, Workflows',
-        about: 'FlowMind is a workflow builder that lets teams automate multi-step processes with AI agents. This build automates lead nurturing end-to-end, coordinating agent actions across the funnel to a 98.4% workflow success rate.',
-        tags: ['AI Automation','OpenAI','Workflows'],
-        images: [
-          {src:'images/flowmind.webp', alt:'FlowMind workflow builder showing an AI agent automating a lead-nurturing process'}
-        ]
-      },
-      projectly: {
-        title: 'Projectly',
-        desc: 'Full-Stack SaaS · Project Management',
-        about: 'Projectly is a full-stack project management SaaS for teams juggling multiple active projects. It brings tasks, activity, and progress into one dashboard so teams can see where every project stands at a glance.',
-        tags: ['Full-Stack SaaS','Project Management'],
-        images: [
-          {src:'images/projectly.webp', alt:'Projectly dashboard showing active projects, tasks, and team activity'}
-        ]
-      },
-      kora: {
-        title: 'Kora',
-        desc: 'E-commerce Platform · Inventory & Orders',
-        about: 'Kora is an e-commerce platform built to simplify how small teams manage inventory and orders. It pairs a live-preview product form with a filterable orders view and a sales dashboard that surfaces inventory alerts at a glance.',
-        tags: ['E-commerce Platform','Inventory & Orders'],
-        images: [
-          {src:'images/kora-1.webp', alt:'Kora add-product form with a live preview panel'},
-          {src:'images/kora-2.webp', alt:'Kora orders page with status filters and order list'},
-          {src:'images/kora-3.webp', alt:'Kora overview dashboard with sales chart and inventory alerts'}
-        ]
-      },
-      noma: {
-        title: 'Noma',
-        desc: 'AI Workspace · Agents & Automation',
-        about: 'Noma is an AI-powered workspace for teams who want automation without losing visibility. It brings project activity, autonomous agents, and everyday tasks into a single home view, with a dedicated space to see what each agent is working on and why.',
-        tags: ['AI Workspace','Agents & Automation'],
-        images: [
-          {src:'images/noma-1.webp', alt:'Noma home dashboard with active projects and AI agents'},
-          {src:'images/noma-2.webp', alt:'Noma workspace overview with automations and tasks'},
-          {src:'images/noma-3.webp', alt:'Noma AI Agents page listing active agents and their purpose'}
-        ]
+    var cards = document.querySelectorAll('.mw-card');
+    cards.forEach(function(card){
+      var slides = card.querySelectorAll('.mw-slide');
+      var dots = card.querySelectorAll('.mw-dot');
+      var prev = card.querySelector('.mw-zone.prev');
+      var next = card.querySelector('.mw-zone.next');
+      var current = 0;
+
+      function show(i){
+        slides[current].classList.remove('active');
+        dots[current].classList.remove('active');
+        current = (i + slides.length) % slides.length;
+        slides[current].classList.add('active');
+        dots[current].classList.add('active');
       }
-    };
-
-    var triggers = Array.prototype.slice.call(document.querySelectorAll('[data-project]'));
-    var lightbox = document.getElementById('workLightbox');
-    var panel = document.getElementById('lightboxPanel');
-    var backdrop = document.getElementById('lightboxBackdrop');
-    var closeBtn = document.getElementById('lightboxClose');
-    var imgPrevBtn = document.getElementById('lightboxImgPrev');
-    var imgNextBtn = document.getElementById('lightboxImgNext');
-    var titleEl = document.getElementById('lightboxTitle');
-    var descEl = document.getElementById('lightboxDesc');
-    var mainImageEl = document.getElementById('lightboxMainImage');
-    var mainImageBox = mainImageEl ? mainImageEl.closest('.lb-main-image') : null;
-    var thumbstripEl = document.getElementById('lightboxThumbstrip');
-    var aboutEl = document.getElementById('lightboxAbout');
-    var tagsEl = document.getElementById('lightboxTags');
-    var moreRowEl = document.getElementById('lightboxMoreRow');
-    var ctaEl = document.getElementById('lightboxCta');
-    var liveLinkEl = document.getElementById('lightboxLiveLink');
-    var likeBtn = document.getElementById('lightboxLike');
-    var saveBtn = document.getElementById('lightboxSave');
-    if(!triggers.length || !lightbox) return;
-
-    var activeId = null;
-    var activeImageIndex = 0;
-    var currentImages = [];
-    var lastFocused = null;
-
-    function readStoredSet(key){
-      try { return JSON.parse(localStorage.getItem(key) || '{}'); } catch(e){ return {}; }
-    }
-    function toggleStoredSet(key, id){
-      var set = readStoredSet(key);
-      set[id] = !set[id];
-      localStorage.setItem(key, JSON.stringify(set));
-      return set[id];
-    }
-    function updateLikeSaveButtons(){
-      var liked = readStoredSet('ja_liked_projects');
-      var saved = readStoredSet('ja_saved_projects');
-      likeBtn.classList.toggle('active', !!liked[activeId]);
-      likeBtn.setAttribute('aria-pressed', liked[activeId] ? 'true' : 'false');
-      saveBtn.classList.toggle('active', !!saved[activeId]);
-      saveBtn.setAttribute('aria-pressed', saved[activeId] ? 'true' : 'false');
-    }
-    likeBtn.addEventListener('click', function(){
-      if(!activeId) return;
-      var isLiked = toggleStoredSet('ja_liked_projects', activeId);
-      likeBtn.classList.toggle('active', isLiked);
-      likeBtn.setAttribute('aria-pressed', isLiked ? 'true' : 'false');
-    });
-    saveBtn.addEventListener('click', function(){
-      if(!activeId) return;
-      var isSaved = toggleStoredSet('ja_saved_projects', activeId);
-      saveBtn.classList.toggle('active', isSaved);
-      saveBtn.setAttribute('aria-pressed', isSaved ? 'true' : 'false');
-    });
-
-    function buildMoreRow(){
-      moreRowEl.innerHTML = '';
-      PROJECT_ORDER.forEach(function(id){
-        if(id === activeId) return;
-        var data = PROJECTS[id];
-        var item = document.createElement('div');
-        item.className = 'lb-more-item';
-        item.setAttribute('role', 'button');
-        item.setAttribute('tabindex', '0');
-        item.innerHTML = '<div class="lb-more-thumb"><img src="' + data.images[0].src + '" alt="' + data.title + ' project thumbnail"></div><p>' + data.title + '</p><span>' + data.desc + '</span>';
-        item.addEventListener('click', function(){ render(id); });
-        item.addEventListener('keydown', function(e){
-          if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); render(id); }
-        });
-        moreRowEl.appendChild(item);
+      if(prev) prev.addEventListener('click', function(e){ e.stopPropagation(); show(current - 1); });
+      if(next) next.addEventListener('click', function(e){ e.stopPropagation(); show(current + 1); });
+      dots.forEach(function(dot, i){
+        dot.addEventListener('click', function(e){ e.stopPropagation(); show(i); });
       });
-    }
-
-    function showImage(i){
-      if(!currentImages.length) return;
-      activeImageIndex = (i + currentImages.length) % currentImages.length;
-      var img = currentImages[activeImageIndex];
-      mainImageEl.src = img.src;
-      mainImageEl.alt = img.alt || '';
-      var thumbs = thumbstripEl.querySelectorAll('.lb-thumb');
-      thumbs.forEach(function(t, ti){ t.classList.toggle('active', ti === activeImageIndex); });
-    }
-
-    function render(id){
-      if(!PROJECTS[id]) return;
-      activeId = id;
-      var data = PROJECTS[id];
-      currentImages = data.images || [];
-
-      titleEl.textContent = data.title;
-      descEl.textContent = data.desc;
-      aboutEl.textContent = data.about;
-
-      tagsEl.innerHTML = '';
-      (data.tags || []).forEach(function(text){
-        var tag = document.createElement('span');
-        tag.className = 'lb-tag';
-        tag.textContent = text;
-        tagsEl.appendChild(tag);
-      });
-
-      thumbstripEl.innerHTML = '';
-      currentImages.forEach(function(img, i){
-        var thumb = document.createElement('div');
-        thumb.className = 'lb-thumb';
-        thumb.setAttribute('role', 'button');
-        thumb.setAttribute('tabindex', '0');
-        thumb.setAttribute('aria-label', img.alt || (data.title + ' image ' + (i + 1)));
-        thumb.innerHTML = '<img src="' + img.src + '" alt="' + (img.alt || '') + '">';
-        thumb.addEventListener('click', function(){ showImage(i); });
-        thumb.addEventListener('keydown', function(e){
-          if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); showImage(i); }
-        });
-        thumbstripEl.appendChild(thumb);
-      });
-      showImage(0);
-
-      var hasMultiple = currentImages.length > 1;
-      imgPrevBtn.classList.toggle('hidden', !hasMultiple);
-      imgNextBtn.classList.toggle('hidden', !hasMultiple);
-
-      if(data.liveUrl){
-        liveLinkEl.href = data.liveUrl;
-        liveLinkEl.classList.remove('hidden');
-      } else {
-        liveLinkEl.classList.add('hidden');
-        liveLinkEl.removeAttribute('href');
-      }
-
-      updateLikeSaveButtons();
-
-      panel.scrollTop = 0;
-      buildMoreRow();
-    }
-
-    function getFocusable(){
-      return Array.prototype.slice.call(lightbox.querySelectorAll(
-        'a[href], button:not(.hidden), [tabindex]:not([tabindex="-1"])'
-      )).filter(function(el){ return el.offsetParent !== null; });
-    }
-
-    function open(id, trigger){
-      lastFocused = trigger || document.activeElement;
-      render(id);
-      lightbox.classList.add('open');
-      lightbox.setAttribute('aria-hidden', 'false');
-      document.body.classList.add('lb-lock');
-      closeBtn.focus();
-    }
-    function close(){
-      lightbox.classList.remove('open');
-      lightbox.setAttribute('aria-hidden', 'true');
-      document.body.classList.remove('lb-lock');
-      if(lastFocused && typeof lastFocused.focus === 'function') lastFocused.focus();
-    }
-
-    triggers.forEach(function(trigger){
-      var id = trigger.getAttribute('data-project');
-      trigger.addEventListener('click', function(e){
-        // allow normal browser behavior for modifier/middle clicks on real links
-        if(trigger.tagName === 'A' && (e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1)) return;
-        e.preventDefault();
-        open(id, trigger);
-      });
-      if(trigger.tagName !== 'A'){
-        trigger.addEventListener('keydown', function(e){
-          if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); open(id, trigger); }
-        });
-      }
     });
-
-    closeBtn.addEventListener('click', close);
-    backdrop.addEventListener('click', close);
-    imgPrevBtn.addEventListener('click', function(){ showImage(activeImageIndex - 1); });
-    imgNextBtn.addEventListener('click', function(){ showImage(activeImageIndex + 1); });
-    if(ctaEl) ctaEl.addEventListener('click', close);
-
-    document.addEventListener('keydown', function(e){
-      if(!lightbox.classList.contains('open')) return;
-      if(e.key === 'Escape'){ close(); return; }
-      if(e.key === 'ArrowLeft'){ showImage(activeImageIndex - 1); return; }
-      if(e.key === 'ArrowRight'){ showImage(activeImageIndex + 1); return; }
-      if(e.key === 'Tab'){
-        var focusable = getFocusable();
-        if(!focusable.length) return;
-        var first = focusable[0];
-        var last = focusable[focusable.length - 1];
-        if(e.shiftKey && document.activeElement === first){
-          e.preventDefault(); last.focus();
-        } else if(!e.shiftKey && document.activeElement === last){
-          e.preventDefault(); first.focus();
-        }
-      }
-    });
-
-    // touch swipe on the main image to move between that project's shots
-    // (only triggers when the gesture is clearly horizontal, so vertical
-    // page scrolling over the image never gets mistaken for a swipe)
-    if(mainImageBox){
-      var touchStartX = null;
-      var touchStartY = null;
-      mainImageBox.addEventListener('touchstart', function(e){
-        touchStartX = e.changedTouches[0].clientX;
-        touchStartY = e.changedTouches[0].clientY;
-      }, {passive: true});
-      mainImageBox.addEventListener('touchend', function(e){
-        if(touchStartX === null) return;
-        var deltaX = e.changedTouches[0].clientX - touchStartX;
-        var deltaY = e.changedTouches[0].clientY - touchStartY;
-        if(Math.abs(deltaX) > 40 && Math.abs(deltaX) > Math.abs(deltaY) * 1.5){
-          showImage(activeImageIndex + (deltaX < 0 ? 1 : -1));
-        }
-        touchStartX = null;
-        touchStartY = null;
-      }, {passive: true});
-    }
   })();
 </script>
 
